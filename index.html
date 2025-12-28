@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FitCrew</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="bg.css" />
+
+  </head>
+  <style>
+    body {
+      background-image: url(background-gym.jpg);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+  </style>
+  <body class="bg-white">
+    <nav class="navbar navbar-expand-lg sticky-top glass-nav navbar-dark">
+      <div class="container-fluid">
+        <a
+          class="navbar-brand d-flex align-items-center gap-2"
+          href="index.html"
+        >
+          <img src="logo-1.png" alt="Logo" width="32" height="32" />
+          <span class="fw-semibold">FitCrew</span>
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav gap-lg-2 text-center">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="bmicalculator.html">BMI Calculator</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="workouttracker.html">Workout Tracker</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="calorietracker.html">Calorie Tracker</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <section id="dashboard" class="container py-5">
+      <h2 class="text-center mb-4 text-white">Dashboard</h2>
+
+      <div class="row text-center mb-4">
+        <div class="col-md-4">
+          <div class="card glass-card">
+            <div class="card-body">
+              <h6>Daily Goal</h6>
+              <h4 id="dashGoal">0 kcal</h4>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card glass-card">
+            <div class="card-body">
+              <h6>Consumed</h6>
+              <h4 id="dashConsumed">0 kcal</h4>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card glass-card">
+            <div class="card-body">
+              <h6>Status</h6>
+              <h4 id="dashStatus">-</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-md-4">
+          <div class="card glass-card text-center">
+            <div class="card-body">
+              <h6>Net Calories</h6>
+              <h4 id="dashNet">0 kcal</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-md-6 pt-4">
+          <div class="card glass-card">
+            <div class="card-body">
+              <canvas id="calorieChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-4">
+        <button class="btn btn-outline-danger px-4" onclick="resetDashboard()">
+          🔄 Reset Dashboard
+        </button>
+      </div>
+    </section>
+    <footer class="glass-footer mt-5">
+      <div class="container py-4 text-center">
+        <h6 class="fw-bold mb-1">FitCrew</h6>
+
+        <p class="small mb-2">Track fitness • Count calories • Stay healthy</p>
+
+        <div class="d-flex justify-content-center gap-3 mb-2">
+          <a href="index.html" class="footer-link">Home</a>
+          <a href="bmicalculator.html" class="footer-link">BMI</a>
+          <a href="calorietracker.html" class="footer-link">Calories</a>
+          <a href="workouttracker.html" class="footer-link">Workout</a>
+        </div>
+
+        <p class="small mb-0">© 2025 FitCrew. All rights reserved.</p>
+      </div>
+    </footer>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+function loadDashboard() {
+
+  fetch("api/get_dashboard.php")
+    .then(res => {
+      if (!res.ok) throw new Error("API error");
+      return res.json();
+    })
+    .then(data => {
+
+      console.log("Dashboard data:", data); // 🔍 DEBUG
+
+      document.getElementById("dashGoal").innerText =
+        data.goal + " kcal";
+
+      document.getElementById("dashConsumed").innerText =
+        data.consumed + " kcal";
+
+      document.getElementById("dashNet").innerText =
+        data.net + " kcal";
+
+      const statusEl = document.getElementById("dashStatus");
+      statusEl.innerText = data.status;
+
+      statusEl.className = "";
+      if (data.net < 0) statusEl.classList.add("text-success");
+      else if (data.net <= 200) statusEl.classList.add("text-warning");
+      else statusEl.classList.add("text-danger");
+
+      const ctx = document.getElementById("calorieChart");
+
+      if (window.calChart) window.calChart.destroy();
+
+      window.calChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: ["Daily Goal", "Net Calories"],
+          datasets: [{
+            data: [data.goal, data.net],
+            backgroundColor: [
+              "#0d6efd",
+              data.net < 0 ? "#198754" : "#dc3545"
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { beginAtZero: true }
+          }
+        }
+      });
+
+    })
+    .catch(err => console.error("Dashboard error:", err));
+}
+
+function resetDashboard() {
+  if (!confirm("Reset today's data?")) return;
+
+  fetch("api/reset_today.php")
+    .then(res => res.json())
+    .then(() => {
+      alert("Today's data reset");
+      loadDashboard();
+    });
+}
+
+window.addEventListener("load", loadDashboard);
+</script>
+
+
+    <script>
+      const currentPage = location.pathname.split("/").pop();
+
+      document.querySelectorAll(".nav-link").forEach((link) => {
+        if (link.getAttribute("href") === currentPage) {
+          link.classList.add("active");
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>FitCrew-Calorie Tracker</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="bg.css" />
+  </head>
+  <style>
+    body {
+      background-image: url(bg-cal.png);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+  </style>
+  <body>
+    <nav class="navbar navbar-expand-lg sticky-top glass-nav navbar-dark">
+      <div class="container-fluid">
+        <a
+          class="navbar-brand d-flex align-items-center gap-2"
+          href="index.html"
+        >
+          <img src="logo-1.png" alt="Logo" width="32" height="32" />
+          <span class="fw-semibold">FitCrew</span>
+        </a>
+
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav gap-lg-2 text-center">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="bmicalculator.html">BMI Calculator</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="workouttracker.html">Workout Tracker</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="calorietracker.html">Calorie Tracker</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Calorie Tracker -->
+    <section id="calorie" class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card glass-card">
+            <div class="card-body">
+              <h3 class="text-center mb-3">Smart Calorie Tracker</h3>
+
+              <label class="form-label">Select Food</label>
+              <select id="foodSelect" class="form-select mb-3"></select>
+
+              <label class="form-label">Amount Eaten (grams)</label>
+              <input
+                type="number"
+                id="grams"
+                class="form-control mb-3"
+                placeholder="e.g. 150"
+              />
+
+              <button class="btn btn-dark w-100" onclick="addFoodFromDB()">
+                Add Food
+              </button>
+              <button
+                class="btn btn-outline-danger w-100 mt-3"
+                onclick="clearCalories()"
+              >
+                Clear Calories
+              </button>
+              <hr />
+              <h5 class="text-center">
+                Total Calories:
+                <span id="totalCalories">0</span> kcal
+              </h5>
+              <ul class="list-group mt-3 mb-3" id="todayFoodList">
+  <li class="list-group-item text-center text-muted">
+    No food added today
+  </li>
+</ul>
+
+              <div class="mt-3">
+                <label class="form-label fw-bold">
+                  Daily Progress (<span id="goalText">0</span> kcal goal)
+                </label>
+
+                <div class="progress">
+                  <div
+                    id="calorieProgress"
+                    class="progress-bar bg-success"
+                    role="progressbar"
+                    style="width: 0%"
+                  >
+                    0%
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="container mt-4">
+  <div class="card glass-card">
+    <div class="card-body">
+      <h5 class="text-center">📊 Weekly Calorie Intake</h5>
+      <ul class="list-group mt-3" id="weeklyCaloriesList">
+        <li class="list-group-item text-center">
+          Loading weekly data...
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+    <footer class="glass-footer mt-5">
+      <div class="container py-4 text-center">
+        <h6 class="fw-bold mb-1">FitCrew</h6>
+
+        <p class="small mb-2">Track fitness • Count calories • Stay healthy</p>
+
+        <div class="d-flex justify-content-center gap-3 mb-2">
+          <a href="index.html" class="footer-link">Home</a>
+          <a href="bmicalculator.html" class="footer-link">BMI</a>
+          <a href="calorietracker.html" class="footer-link">Calories</a>
+          <a href="workouttracker.html" class="footer-link">Workout</a>
+        </div>
+
+        <p class="small mb-0">© 2025 FitCrew. All rights reserved.</p>
+      </div>
+    </footer>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+    <script src="script.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>FitCrew-BMI Calculator</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="bg.css"/>
+    </head>
+    <style>body {
+  background-image: url(bg-bmi-2.png);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}</style>
+    <body>
+        <nav class="navbar navbar-expand-lg sticky-top glass-nav navbar-dark">
+  <div class="container-fluid">
+
+    <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+      <img src="logo-1.png" alt="Logo" width="32" height="32">
+      <span class="fw-semibold">FitCrew</span>
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav gap-lg-2 text-center">
+
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Home</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="bmicalculator.html">BMI Calculator</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="workouttracker.html">Workout Tracker</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="calorietracker.html">Calorie Tracker</a>
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+      <section id="bmi" class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="card glass-card">
+        <div class="card-body">
+          <h3 class="text-center mb-3">BMI Calculator</h3>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Age</label>
+              <input type="number" id="age" class="form-control" placeholder="Years">
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Gender</label>
+              <select id="gender" class="form-select">
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Height (cm)</label>
+            <input type="number" id="height" class="form-control" placeholder="Enter height">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Weight (kg)</label>
+            <input type="number" id="weight" class="form-control" placeholder="Enter weight">
+          </div>
+
+          <button class="btn btn-dark w-100" onclick="calculateAll()">
+            Calculate BMI
+          </button>
+          <hr>
+          <div class="mt-3 text-center">
+            <h5 id="bmiResult"></h5>
+            <p id="bmiStatus" class="fw-bold"></p>
+          </div>
+        <p><strong>Maintenance Calories:</strong> <span id="maintain"></span></p>
+            <p class="text-success"><strong>Weight Gain Calories:</strong> <span id="gain"></span></p>
+            <p class="text-danger"><strong>Weight Loss Calories:</strong> <span id="loss"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<footer class="glass-footer mt-5">
+  <div class="container py-4 text-center">
+    <h6 class="fw-bold mb-1">FitCrew</h6>
+
+    <p class="small mb-2">
+      Track fitness • Count calories • Stay healthy
+    </p>
+
+    <div class="d-flex justify-content-center gap-3 mb-2">
+      <a href="index.html" class="footer-link">Home</a>
+      <a href="bmicalculator.html" class="footer-link">BMI</a>
+      <a href="calorietracker.html" class="footer-link">Calories</a>
+      <a href="workouttracker.html" class="footer-link">Workout</a>
+    </div>
+
+    <p class="small mb-0">
+      © 2025 FitCrew. All rights reserved.
+    </p>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+   <script>
+function calculateAll() {
+
+  let age = Number(document.getElementById("age").value);
+  let gender = document.getElementById("gender").value;
+  let height = Number(document.getElementById("height").value);
+  let weight = Number(document.getElementById("weight").value);
+
+  if (!age || !gender || !height || !weight) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  // BMI
+  let hMeter = height / 100;
+  let bmi = (weight / (hMeter * hMeter)).toFixed(2);
+
+  let status = "", color = "";
+  if (bmi < 18.5) { status = "Underweight"; color = "text-warning"; }
+  else if (bmi < 25) { status = "Normal"; color = "text-success"; }
+  else if (bmi < 30) { status = "Overweight"; color = "text-danger"; }
+  else { status = "Obese"; color = "text-danger"; }
+
+  // BMR
+  let bmr = gender === "male"
+    ? 10 * weight + 6.25 * height - 5 * age + 5
+    : 10 * weight + 6.25 * height - 5 * age - 161;
+
+  let maintenance = Math.round(bmr * 1.55);
+  let loss = maintenance - 500;
+  let gain = maintenance + 500;
+
+  // 🔥 SAVE DAILY GOAL TO DATABASE
+  fetch("api/update_daily_goal.php", {
+  method: "POST",
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: `goal=${maintenance}`
+})
+.then(res => res.json())
+.then(data => {
+  console.log("Goal update:", data);
+});
+
+
+
+  // Update UI
+  document.getElementById("bmiResult").innerText = "Your BMI: " + bmi;
+  document.getElementById("bmiStatus").innerText = status;
+  document.getElementById("bmiStatus").className = color;
+
+  document.getElementById("maintain").innerText = maintenance + " kcal/day";
+  document.getElementById("loss").innerText = loss + " kcal/day";
+  document.getElementById("gain").innerText = gain + " kcal/day";
+}
+
+</script>
+<script>
+  const currentPage = location.pathname.split("/").pop();
+
+  document.querySelectorAll(".nav-link").forEach(link => {
+    if (link.getAttribute("href") === currentPage) {
+      link.classList.add("active");
+    }
+  });
+</script>
+
+  
+    </body>
+    
+
+</html>
