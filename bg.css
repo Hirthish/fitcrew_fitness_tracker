@@ -1,0 +1,89 @@
+html {
+    scroll-behavior: smooth;
+  }
+  
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  color: #fff;
+}
+
+.glass-card h6 {
+  opacity: 0.85;
+}
+
+.glass-card h4 {
+  font-weight: 600;
+}
+
+/* Dashboard background fix */
+
+.glass-card {
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+
+  /* 🔥 THIS LINE FIXES BUTTONS */
+  pointer-events: none;
+}
+
+
+.glass-card:hover::before {
+  opacity: 0.5;
+}
+
+.glass-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 12px 45px rgb(0, 0, 0);
+}
+.glass-nav {
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.glass-nav .navbar-brand,
+.glass-nav .nav-link {
+  color: #ffffff !important;
+}
+
+.glass-nav .nav-link:hover {
+  color: #fae26a !important;
+}
+.glass-footer {
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.footer-link {
+  color: #cccccc;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #fbff00;
+}
