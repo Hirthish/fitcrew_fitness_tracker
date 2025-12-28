@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FitCrew – Workout Tracker</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="bg.css">
+</head>
+<style>body {
+  background-image: url(workout-bg.jpg);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}</style>
+<body>
+<nav class="navbar navbar-expand-lg sticky-top glass-nav navbar-dark">
+  <div class="container-fluid">
+
+    <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+      <img src="logo-1.png" alt="Logo" width="32" height="32">
+      <span class="fw-semibold">FitCrew</span>
+    </a>
+
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav gap-lg-2 text-center">
+
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Home</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="bmicalculator.html">BMI Calculator</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="workouttracker.html">Workout Tracker</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="calorietracker.html">Calorie Tracker</a>
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+<section class="container py-5">
+  <div class="row justify-content-center g-4">
+
+    <!-- LEFT: WORKOUT TRACKER -->
+    <div class="col-lg-6">
+      <div class="card glass-card h-100">
+        <div class="card-body">
+
+          <h3 class="text-center mb-3">Workout Tracker</h3>
+
+          <label class="form-label">Workout Type</label>
+          <select id="workoutType" class="form-select mb-3">
+  <option value="">Select workout</option>
+
+  <optgroup label="🏃 Cardio">
+    <option value="running">Running</option>
+    <option value="jogging">Jogging</option>
+    <option value="walking">Walking</option>
+    <option value="cycling">Cycling</option>
+    <option value="skipping">Skipping Rope</option>
+    <option value="stairs">Stair Climbing</option>
+    <option value="swimming">Swimming</option>
+  </optgroup>
+
+  <optgroup label="💪 Strength">
+    <option value="pushups">Push Ups</option>
+    <option value="pullups">Pull Ups</option>
+    <option value="squats">Squats</option>
+    <option value="lunges">Lunges</option>
+    <option value="plank">Plank</option>
+    <option value="burpees">Burpees</option>
+  </optgroup>
+
+  <optgroup label="🧘 Flexibility">
+    <option value="yoga">Yoga</option>
+    <option value="stretching">Stretching</option>
+    <option value="pilates">Pilates</option>
+    <option value="meditation">Meditation</option>
+  </optgroup>
+
+  <optgroup label="🔥 High Intensity">
+    <option value="hiit">HIIT</option>
+    <option value="jumpingjacks">Jumping Jacks</option>
+    <option value="highknees">High Knees</option>
+    <option value="shadowboxing">Shadow Boxing</option>
+  </optgroup>
+</select>
+
+
+          <label class="form-label">Duration (minutes / reps)</label>
+          <input type="number" id="duration" class="form-control mb-3" placeholder="e.g. 30">
+
+          <button class="btn btn-dark w-100" onclick="addWorkout()">
+            Add Workout
+          </button>
+
+          <hr>
+
+          <h5 class="text-center">
+            Calories Burned: <span id="burned">0</span> kcal
+          </h5>
+
+          <button
+            class="btn btn-outline-danger w-100 mt-3"
+            onclick="resetWorkouts()"
+          >
+            Reset Workouts
+          </button>
+
+          <ul class="list-group mt-3" id="workoutList"></ul>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: WORKOUT SUGGESTION -->
+    <div class="col-lg-4">
+      <div class="card glass-card h-100 text-center">
+        <div class="card-body d-flex flex-column justify-content-center">
+
+          <h5 class="mb-2">🏋️ Workout Suggestion</h5>
+
+<span id="fitnessStatus" class="badge bg-secondary mb-2">—</span>
+
+<p id="workoutSuggestion" class="fw-semibold fs-6 mb-2">
+  Add workout to get suggestion
+</p>
+
+<small id="suggestionReason" class="text-muted"></small>
+
+<button id="startWorkoutBtn" class="btn btn-outline-light w-100 mb-2">
+  Start Suggested Workout
+</button>
+
+<button id="restTodayBtn" class="btn btn-outline-light w-100">
+  Rest Today
+</button>
+
+
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<p id="bmiNote" class="small text-warning fw-semibold mb-2"></p>
+
+<section class="container py-4">
+  <div class="row g-4">
+
+    <!-- Weekly Workout History -->
+    <div class="col-md-6">
+      <div class="card glass-card">
+        <div class="card-body">
+          <h5 class="text-center mb-3">🏋️ Weekly Workout History</h5>
+          <ul id="weeklyWorkoutList" class="list-group"></ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weekly Calorie Intake History -->
+    <div class="col-md-6">
+      <div class="card glass-card">
+        <div class="card-body">
+          <h5 class="text-center mb-3">🍽️ Weekly Calorie Intake</h5>
+          <ul id="weeklyCalorieList" class="list-group"></ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<footer class="glass-footer mt-5">
+  <div class="container py-4 text-center">
+    <h6 class="fw-bold mb-1">FitCrew</h6>
+
+    <p class="small mb-2">
+      Track fitness • Count calories • Stay healthy
+    </p>
+
+    <div class="d-flex justify-content-center gap-3 mb-2">
+      <a href="index.html" class="footer-link">Home</a>
+      <a href="bmicalculator.html" class="footer-link">BMI</a>
+      <a href="calorietracker.html" class="footer-link">Calories</a>
+      <a href="workouttracker.html" class="footer-link">Workout</a>
+    </div>
+
+    <p class="small mb-0">
+      © 2025 FitCrew. All rights reserved.
+    </p>
+  </div>
+</footer>
+
+<script>
+let workouts = JSON.parse(localStorage.getItem("workouts")) || [];
+updateWorkouts();
+
+function addWorkout() {
+  const type = document.getElementById("workoutType").value;
+  const duration = Number(document.getElementById("duration").value);
+
+  if (!type || duration <= 0) {
+    alert("Select workout & valid duration");
+    return;
+  }
+
+  let calories = 0;
+  switch (type) {
+    case "running": calories = duration * 10; break;
+    case "jogging": calories = duration * 8; break;
+    case "walking": calories = duration * 4; break;
+    case "cycling": calories = duration * 8; break;
+    case "skipping": calories = duration * 12; break;
+    case "stairs": calories = duration * 9; break;
+    case "swimming": calories = duration * 11; break;
+
+    case "pushups": calories = duration * 2; break;
+    case "pullups": calories = duration * 3; break;
+    case "squats": calories = duration * 4; break;
+    case "lunges": calories = duration * 4; break;
+    case "plank": calories = duration * 3; break;
+    case "burpees": calories = duration * 8; break;
+
+    case "yoga": calories = duration * 3; break;
+    case "stretching": calories = duration * 2; break;
+    case "pilates": calories = duration * 4; break;
+    case "meditation": calories = duration * 1; break;
+
+    case "hiit": calories = duration * 12; break;
+    case "jumpingjacks": calories = duration * 8; break;
+    case "highknees": calories = duration * 9; break;
+    case "shadowboxing": calories = duration * 7; break;
+  }
+
+  /* ✅ CRITICAL FIX — UPDATE UI DATA */
+  workouts.push({
+    name: type,
+    duration: duration,
+    calories: calories,
+    date: new Date().toLocaleDateString("en-GB")
+  });
+  localStorage.setItem("workouts", JSON.stringify(workouts));
+  updateWorkouts();
+
+  /* ✅ API CALL (kept as-is) */
+  fetch("api/add_workout.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: `type=${type}&duration=${duration}&calories=${calories}`
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === "success") {
+      updateWorkouts();
+      loadWeeklyWorkouts();
+      suggestWorkout();
+      if (typeof loadDashboard === "function") {
+      loadDashboard();
+    }
+    }
+  })
+  .catch(err => console.error("Add workout error:", err));
+}
+
+
+function updateWorkouts() {
+  const list = document.getElementById("workoutList");
+  list.innerHTML = "";
+
+  let totalBurned = 0;
+  const grouped = {};
+
+  workouts.forEach(w => {
+    totalBurned += w.calories;
+    grouped[w.date] = grouped[w.date] || [];
+    grouped[w.date].push(w);
+  });
+
+  for (let date in grouped) {
+    list.innerHTML += `
+      <li class="list-group-item active fw-bold">📅 ${date}</li>
+    `;
+    grouped[date].forEach(w => {
+      list.innerHTML += `
+        <li class="list-group-item d-flex justify-content-between">
+          ${w.name} (${w.duration})
+          <span>${w.calories} kcal</span>
+        </li>
+      `;
+    });
+  }
+
+  document.getElementById("burned").innerText = totalBurned;
+  localStorage.setItem("burnedCalories", totalBurned);
+
+  suggestWorkout(); // ✅ single source of suggestion
+}
+
+function suggestWorkout() {
+
+  const suggestionEl = document.getElementById("workoutSuggestion");
+  const statusEl = document.getElementById("fitnessStatus");
+  const reasonEl = document.getElementById("suggestionReason");
+  const startBtn = document.getElementById("startWorkoutBtn");
+  const restBtn = document.getElementById("restTodayBtn");
+
+  // ✅ Burned calories from LOCAL STORAGE (authoritative)
+  const burned = Number(localStorage.getItem("burnedCalories")) || 0;
+
+  // ✅ Consumed calories from DATABASE
+  fetch("api/get_today_calories.php")
+    .then(res => res.json())
+    .then(data => {
+
+      const consumed = Number(data.total) || 0;
+      const netCalories = consumed - burned;
+
+      /* ---------------- NO DATA ---------------- */
+      if (consumed === 0 && burned === 0) {
+        statusEl.innerText = "No Data";
+        statusEl.className = "badge bg-secondary";
+        suggestionEl.innerText = "➕ Add food or workouts to get suggestion";
+        reasonEl.innerText = "";
+        startBtn.disabled = true;
+        restBtn.disabled = true;
+        return;
+      }
+
+      // ✅ ENABLE buttons
+      startBtn.disabled = false;
+      restBtn.disabled = false;
+
+      /* ---------------- SUGGESTION LOGIC ---------------- */
+      if (netCalories <= 0) {
+        statusEl.innerText = "Balanced 🟢";
+        statusEl.className = "badge bg-success";
+        suggestionEl.innerText = "🧘 Light yoga or rest is enough today.";
+      }
+      else if (netCalories <= 300) {
+        statusEl.innerText = "Light Activity 🟡";
+        statusEl.className = "badge bg-warning text-dark";
+        suggestionEl.innerText = "🚶 Try walking or stretching (20–30 mins).";
+      }
+      else if (netCalories <= 600) {
+        statusEl.innerText = "Moderate 🔵";
+        statusEl.className = "badge bg-primary";
+        suggestionEl.innerText = "🚴 Jogging or cycling (30–40 mins).";
+      }
+      else {
+        statusEl.innerText = "High Load 🔴";
+        statusEl.className = "badge bg-danger";
+        suggestionEl.innerText = "🏃 HIIT or running recommended.";
+      }
+
+      reasonEl.innerText =
+        `Based on ${consumed} kcal intake and ${burned} kcal burned`;
+    })
+    .catch(err => console.error("Suggestion error:", err));
+}
+
+
+function resetWorkouts() {
+  if (!confirm("Do you want to clear all workout data?")) return;
+
+  workouts = [];
+  localStorage.removeItem("workouts");
+  localStorage.removeItem("burnedCalories");
+
+  document.getElementById("workoutList").innerHTML = "";
+  document.getElementById("burned").innerText = "0";
+  document.getElementById("workoutSuggestion").innerText =
+    "Workouts cleared. Add a new workout to get suggestions.";
+}
+function filterWorkoutsByBMI() {
+
+  const bmiStatus = localStorage.getItem("bmiStatus");
+  const select = document.getElementById("workoutType");
+  const note = document.getElementById("bmiNote");
+
+  if (!bmiStatus) {
+    note.innerText = "";
+    return;
+  }
+
+  const workoutRules = {
+    "Underweight": {
+      allowed: ["walking", "yoga", "stretching", "meditation"],
+      msg: "⚠️ Underweight: Light workouts only"
+    },
+    "Normal": {
+      allowed: "all",
+      msg: "✅ Normal BMI: All workouts available"
+    },
+    "Overweight": {
+      allowed: ["walking", "cycling", "yoga", "swimming"],
+      msg: "⚠️ Overweight: Low-impact workouts recommended"
+    },
+    "Obese": {
+      allowed: ["walking", "yoga", "stretching"],
+      msg: "⚠️ Obese: Safe, low-impact workouts only"
+    }
+  };
+
+  const rule = workoutRules[bmiStatus];
+  note.innerText = rule.msg;
+
+  Array.from(select.options).forEach(option => {
+
+    if (!option.value) return;
+
+    if (rule.allowed === "all") {
+      option.hidden = false;
+    } else {
+      option.hidden = !rule.allowed.includes(option.value);
+    }
+  });
+}
+function getLast7Days() {
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    days.push(d.toLocaleDateString("en-GB"));
+  }
+  return days;
+}
+function loadWeeklyWorkouts() {
+  const list = document.getElementById("weeklyWorkoutList");
+  const workouts = JSON.parse(localStorage.getItem("workouts")) || [];
+  const last7Days = getLast7Days();
+
+  list.innerHTML = "";
+  let hasData = false;
+
+  last7Days.forEach(day => {
+    const dayWorkouts = workouts.filter(w => w.date === day);
+    let total = 0;
+
+    dayWorkouts.forEach(w => total += w.calories);
+
+    if (total > 0) {
+      hasData = true;
+      list.innerHTML += `
+        <li class="list-group-item d-flex justify-content-between">
+          ${day}
+          <span>${total} kcal</span>
+        </li>`;
+    }
+  });
+
+  if (!hasData) {
+    list.innerHTML =
+      `<li class="list-group-item text-center">No workouts this week</li>`;
+  }
+}
+
+function loadWeeklyCalories() {
+
+  fetch("api/get_weekly_calories.php")
+    .then(res => res.json())
+    .then(data => {
+
+      const list = document.getElementById("weeklyCalorieList");
+      list.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        list.innerHTML = `
+          <li class="list-group-item text-center">
+            No calorie intake logged
+          </li>`;
+        return;
+      }
+
+      data.forEach(day => {
+        list.innerHTML += `
+          <li class="list-group-item d-flex justify-content-between">
+            ${day.intake_date}
+            <span>${day.total_calories} kcal</span>
+          </li>`;
+      });
+    });
+}
+document.getElementById("startWorkoutBtn")?.addEventListener("click", () => {
+
+  const suggestion = document.getElementById("workoutSuggestion").innerText;
+
+  if (!suggestion || suggestion.includes("Add workouts")) {
+    alert("Add workouts first to get a suggestion");
+    return;
+  }
+
+  alert("🔥 Starting suggested workout!\n\n" + suggestion);
+
+  // OPTIONAL: Auto-select workout type
+  if (suggestion.includes("walk")) workoutType.value = "walking";
+  else if (suggestion.includes("jog")) workoutType.value = "jogging";
+  else if (suggestion.includes("run")) workoutType.value = "running";
+  else if (suggestion.includes("HIIT")) workoutType.value = "hiit";
+});
+
+
+document.getElementById("restTodayBtn")?.addEventListener("click", () => {
+  alert("🧘 Rest day selected.\nRecovery is important!");
+});
+
+window.onload = function () {
+  filterWorkoutsByBMI();
+  updateWorkouts();
+  loadWeeklyCalories();
+  loadWeeklyWorkouts();
+};
+
+</script>
+<script>
+  const currentPage = location.pathname.split("/").pop();
+
+  document.querySelectorAll(".nav-link").forEach(link => {
+    if (link.getAttribute("href") === currentPage) {
+      link.classList.add("active");
+    }
+  });
+</script>
+</body>
+</html>
